@@ -1,0 +1,46 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Logs
+logs/
+*.log
+*.log.*
+
+# Vite
+dist/
+.vite/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Editor directories and files
+.idea/
+.vscode/
+*.swp
+*.swo
+*.swn
+
+# MacOS
+.DS_Store
+
+# Linux
+*.lock
+
+# Build output
+build/
+out/
+
+# Dependency directories
+client/node_modules/
+server/node_modules/
+
+# Miscellaneous
+*.bak
+*.tmp
+*.temp
