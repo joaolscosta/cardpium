@@ -1,10 +1,13 @@
-import { useEffect, useState } from "react";
+import React from "react";
+import "./App.css";
+
+import { useEffect } from "react";
+import { useState } from "react";
+
 
 function App() {
-   const [msg, setMsg] = useState("");
-
-   useEffect(() => {}, []);
-
+   
+   
    return (
       <div>
          <h1>Abc</h1>
