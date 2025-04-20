@@ -1,0 +1,114 @@
+/* General Styles */
+body {
+   margin: 0;
+   font-family: Arial, sans-serif;
+   line-height: 1.6;
+   background: #333;
+}
+
+.container {
+   max-width: 1200px;
+   margin: 0 auto;
+   padding: 0 20px;
+}
+
+/* Topbar */
+.topbar {
+   background: #333;
+   color: #fff;
+   padding: 10px 0;
+}
+
+.topbar .logo {
+   display: inline-block;
+   font-size: 24px;
+   font-weight: bold;
+   margin: 0;
+}
+
+.topbar nav {
+   float: right;
+}
+
+.topbar .nav-links {
+   list-style: none;
+   margin: 0;
+   padding: 0;
+   display: flex;
+}
+
+.topbar .nav-links li {
+   margin-left: 20px;
+}
+
+.topbar .nav-links a {
+   color: #fff;
+   text-decoration: none;
+}
+
+.topbar .nav-links a:hover {
+   text-decoration: underline;
+}
+
+/* Hero Section */
+.hero {
+   text-align: center;
+   padding: 100px 20px;
+   background: #f4f4f4;
+}
+
+.hero h1 {
+   font-size: 48px;
+   margin-bottom: 20px;
+}
+
+.hero p {
+   font-size: 18px;
+   margin-bottom: 30px;
+}
+
+.cta-button {
+   background: #007bff;
+   color: #fff;
+   border: none;
+   padding: 10px 20px;
+   font-size: 16px;
+   cursor: pointer;
+   border-radius: 5px;
+}
+
+.cta-button:hover {
+   background: #0056b3;
+}
+
+/* Sections */
+.section {
+   padding: 50px 20px;
+   text-align: center;
+}
+
+.section h2 {
+   font-size: 32px;
+   margin-bottom: 20px;
+}
+
+.section p,
+.section ul {
+   font-size: 18px;
+}
+
+.section ul {
+   list-style: none;
+   padding: 0;
+}
+
+.section ul li {
+   margin-bottom: 10px;
+}
+
+.footer {
+   text-align: center;
+   padding: 20px;
+   background: #333;
+   color: #fff;
+}
