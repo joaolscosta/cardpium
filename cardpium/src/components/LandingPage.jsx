@@ -3,41 +3,40 @@ import React from "react";
 function LandingPage() {
    return (
       <>
-         {/* Topbar */}
-         <header className="topbar">
-            <div className="container">
-               <h1 className="logo">Cardpium</h1>
-               <nav>
-                  <ul className="nav-links">
-                     <li>
-                        <a href="#about">About</a>
-                     </li>
-                  </ul>
-               </nav>
+         <div className="landing-page">
+            <div className="topbar">
+               <div className="logo">Cardpium.</div>
+               <div className="auth-buttons">
+                  <a href="login">Login</a>
+                  <p className="or">or</p>
+                  <a href="register">Register</a>
+               </div>
             </div>
-         </header>
 
-         {/* Landing Page Content */}
-         <main className="landing">
-            <section className="hero">
-               <h1>Welcome to Cardpium</h1>
-               <p>Your ultimate solution for managing cards efficiently.</p>
-               <button className="cta-button">Get Started</button>
-            </section>
-         </main>
-
-         {/* Footer */}
-         <footer className="footer">
-            <div className="container">
-               <p>&copy; 2025 Cardpium. All rights reserved.</p>
-               <section id="contact">
-                  <h2>Contact Us</h2>
-                  <p>
-                     Have questions? Reach out to us at <a href="mailto:support@cardpium.com">support@cardpium.com</a>.
-                  </p>
-               </section>
+            <div className="hero">
+               <div className="hero-text">
+                  <h1>Master anything with Cardpium.</h1>
+                  <p>Your intelligent flashcard partner to learn faster and remember longer.</p>
+                  <a href="register" className="get-started-button">
+                     Get Started for free!
+                  </a>
+               </div>
             </div>
-         </footer>
+
+            <footer>
+               <div className="footer-content">
+                  <p>© 2023 Cardpium. All rights reserved.</p>
+                  <div className="social-icons">
+                     <a href="https://github.com" target="_blank" rel="noopener noreferrer">
+                        GitHub
+                     </a>
+                     <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">
+                        LinkedIn
+                     </a>
+                  </div>
+               </div>
+            </footer>
+         </div>
       </>
    );
 }
