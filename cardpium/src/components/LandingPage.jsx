@@ -1,4 +1,5 @@
 import React from "react";
+import "../styles/LandingPage.css";
 import { Link } from "react-router-dom";
 
 function LandingPage() {
@@ -25,12 +26,15 @@ function LandingPage() {
 
          <footer>
             <div className="footer-content">
-               <p>© 2023 Cardpium. All rights reserved.</p>
+               <p>© 2025 Cardpium. All rights reserved.</p>
                <div className="social-icons">
-                  <a href="https://github.com" target="_blank" rel="noopener noreferrer">
+                  <a href="https://github.com/joaolscosta" target="_blank" rel="noopener noreferrer">
                      GitHub
                   </a>
-                  <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">
+                  <a
+                     href="https://www.linkedin.com/in/jo%C3%A3o-costa-876a14253/"
+                     target="_blank"
+                     rel="noopener noreferrer">
                      LinkedIn
                   </a>
                </div>

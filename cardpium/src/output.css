@@ -91,6 +91,10 @@ body {
    display: inline-block;
 }
 
+.get-started-button:hover {
+   background-color: #e0e0e0;
+}
+
 footer {
    display: flex;
    justify-content: center;

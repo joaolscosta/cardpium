@@ -2,7 +2,7 @@
 
 echo "Initializing backend..."
 
-# Load environment variables from .env
+# Load .env
 export $(grep -v '^#' .env | xargs)
 
 # Ensure the database table exists
@@ -16,8 +16,5 @@ CREATE TABLE IF NOT EXISTS users (
 );
 EOF
 
-# Install dependencies
 npm install
-
-# Start the backend server
 node index.js
