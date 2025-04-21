@@ -87,6 +87,7 @@
    background-color: #2c7745;
    color: white;
    padding: 10px 20px;
+   margin: 20px 0 0 0;
    border: none;
    border-radius: 5px;
    font-size: 17px;
@@ -96,4 +97,21 @@
 
 .submit-button:hover {
    background-color: #27693d;
+}
+
+.no-account {
+   margin-top: 20px;
+   font-size: 14px;
+   color: white;
+   text-align: center;
+}
+
+.register-link {
+   color: #519454;
+   text-decoration: none;
+   font-weight: bold;
+}
+
+.register-link:hover {
+   text-decoration: underline;
 }

@@ -1,5 +1,6 @@
 import React from "react";
 import "../styles/AuthenticationPages.css";
+import { Link } from "react-router-dom";
 
 function Register() {
    return (
@@ -17,12 +18,12 @@ function Register() {
             <p className="divider">or</p>
             <form className="register-form">
                <div className="form-group">
-                  <label htmlFor="email">Email</label>
-                  <input type="email" id="email" placeholder="Enter your email" />
-               </div>
-               <div className="form-group">
                   <label htmlFor="username">Username</label>
                   <input type="text" id="username" placeholder="Enter your username" />
+               </div>
+               <div className="form-group">
+                  <label htmlFor="email">Email</label>
+                  <input type="email" id="email" placeholder="Enter your email" />
                </div>
                <div className="form-group">
                   <label htmlFor="password">Password</label>
@@ -32,6 +33,12 @@ function Register() {
                   Create Account
                </button>
             </form>
+            <p className="no-account">
+               Already have an account?{" "}
+               <Link to="/login" className="register-link">
+                  Login here!
+               </Link>
+            </p>
          </div>
       </div>
    );
