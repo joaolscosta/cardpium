@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "../styles/AuthenticationPages.css";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 function Register() {
    const [formData, setFormData] = useState({
@@ -18,7 +19,7 @@ function Register() {
       }));
    };
 
-   const handleSubmit = (e) => {
+   const handleSubmit = async (e) => {
       e.preventDefault();
       const { username, email, password } = formData;
 
@@ -27,9 +28,21 @@ function Register() {
          return;
       }
 
-      // Clear
       setErrorMessage("");
-      // TODO - API call to register the user
+      try {
+         const response = await axios.post("http://localhost:3001/register", {
+            username,
+            email,
+            password,
+         });
+
+         alert("User registered successfully!");
+         // Clear
+         setFormData({ username: "", email: "", password: "" });
+      } catch (error) {
+         console.error("Error during registration:", error);
+         setErrorMessage(error.response?.data?.error || "An unexpected error occurred. Please try again.");
+      }
    };
 
    return (
