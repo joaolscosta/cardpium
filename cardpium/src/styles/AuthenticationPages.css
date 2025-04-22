@@ -5,6 +5,28 @@
    color: white;
 }
 
+.logo-auth {
+   position: absolute;
+   top: 60px;
+   left: 60px;
+   font-size: 24px;
+   font-weight: bold;
+   color: white;
+   border: none;
+   cursor: pointer;
+   text-decoration: none;
+}
+
+.logo-auth a {
+   color: white;
+   text-decoration: none;
+}
+
+.logo-auth a:visited {
+   color: white;
+   text-decoration: none;
+}
+
 .register-left,
 .register-right {
    flex: 1;
@@ -114,4 +136,11 @@
 
 .register-link:hover {
    text-decoration: underline;
+}
+
+.error-message {
+   color: #ff4d4d;
+   font-size: 14px;
+   margin-top: 10px;
+   text-align: center;
 }

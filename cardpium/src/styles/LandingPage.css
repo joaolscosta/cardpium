@@ -80,8 +80,8 @@ body {
 }
 
 .get-started-button {
-   background-color: #ffffff;
-   color: #191919;
+   background-color: #2c7745;
+   color: #fff;
    padding: 13px 20px;
    border-radius: 5px;
    text-decoration: none;
@@ -92,7 +92,7 @@ body {
 }
 
 .get-started-button:hover {
-   background-color: #e0e0e0;
+   background-color: #27693d;
 }
 
 footer {
