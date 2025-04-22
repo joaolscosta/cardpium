@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import mysql from "mysql2";
 import bcrypt from "bcrypt";
+import nodemailer from "nodemailer";
 
 dotenv.config();
 const app = express();
@@ -28,6 +29,33 @@ app.get("/test", (req, res) => {
    res.send("running");
 });
 
+/* ------------------------ 2FA Verification Code Generation and Sending ------------------------ */
+
+// TEMPORARY IN-MEMORY STORE
+const verificationCodes = new Map();
+
+function generateCode() {
+   return Math.floor(1000 + Math.random() * 9000).toString();
+}
+
+async function sendVerificationEmail(email, code) {
+   const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+         user: process.env.EMAIL_USER,
+         pass: process.env.EMAIL_PASS,
+      },
+   });
+
+   await transporter.sendMail({
+      from: `"Cardpium" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: "Your Cardpium Verification Code",
+      text: `Your 2FA verification code is ${code}. It expires in 10 minutes.`,
+   });
+}
+
+//* Register new user
 app.post("/register", async (req, res) => {
    const { username, email, password } = req.body;
 
@@ -38,7 +66,7 @@ app.post("/register", async (req, res) => {
    try {
       // Check if the email or username already exists
       const checkQuery = "SELECT * FROM users WHERE email = ? OR username = ?";
-      db.query(checkQuery, [email, username], async (err, results) => {
+      db.query(checkQuery, [email, username], (err, results) => {
          if (err) {
             console.error("Error checking user:", err);
             return res.status(500).json({ error: "Internal server error" });
@@ -53,18 +81,54 @@ app.post("/register", async (req, res) => {
             }
          }
 
-         const saltRounds = 10;
-         const hashedPassword = await bcrypt.hash(password, saltRounds);
+         // Generate and send the verification code
+         const code = generateCode();
+         const expiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes
+         verificationCodes.set(email, { code, expiresAt, username, password });
 
-         // Insert the new user into the database
-         const insertQuery = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
-         db.query(insertQuery, [username, email, hashedPassword], (err, result) => {
-            if (err) {
-               console.error("Error inserting user:", err);
-               return res.status(500).json({ error: "Failed to register user" });
-            }
-            res.status(201).json({ message: "User registered successfully" });
-         });
+         sendVerificationEmail(email, code)
+            .then(() => {
+               res.status(200).json({ message: "Verification code sent to your email." });
+            })
+            .catch((err) => {
+               console.error("Email send error:", err);
+               res.status(500).json({ error: "Failed to send verification code." });
+            });
+      });
+   } catch (err) {
+      console.error("Error during registration:", err);
+      res.status(500).json({ error: "Internal server error" });
+   }
+});
+
+//* Verify the 2FA code
+app.post("/verify-code", async (req, res) => {
+   const { email, code } = req.body;
+   const entry = verificationCodes.get(email);
+
+   if (!entry) return res.status(400).json({ error: "No code sent" });
+   if (Date.now() > entry.expiresAt) {
+      verificationCodes.delete(email);
+      return res.status(400).json({ error: "Code expired" });
+   }
+
+   if (entry.code !== code) return res.status(400).json({ error: "Invalid code" });
+
+   // Create the user in the database
+   const { username, password } = entry;
+   try {
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+      const insertQuery = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+      db.query(insertQuery, [username, email, hashedPassword], (err, result) => {
+         if (err) {
+            console.error("Error inserting user:", err);
+            return res.status(500).json({ error: "Failed to create user" });
+         }
+
+         verificationCodes.delete(email);
+         res.status(201).json({ message: "User created successfully" });
       });
    } catch (err) {
       console.error("Error hashing password:", err);

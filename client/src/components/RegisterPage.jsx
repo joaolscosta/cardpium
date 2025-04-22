@@ -9,7 +9,11 @@ function Register() {
       email: "",
       password: "",
    });
+
+   const [code, setCode] = useState("");
+   const [verificationStage, setVerificationStage] = useState(false);
    const [errorMessage, setErrorMessage] = useState("");
+   const [successMessage, setSuccessMessage] = useState("");
 
    const handleInputChange = (e) => {
       const { id, value } = e.target;
@@ -29,19 +33,39 @@ function Register() {
       }
 
       setErrorMessage("");
+      setSuccessMessage("");
       try {
+         // Send registration data to the backend to generate a verification code
          const response = await axios.post("http://localhost:3001/register", {
             username,
             email,
             password,
          });
 
-         alert("User registered successfully!");
-         // Clear
-         setFormData({ username: "", email: "", password: "" });
+         setVerificationStage(true);
+         setSuccessMessage("A verification code was sent to your email. Please enter it below.");
       } catch (error) {
          console.error("Error during registration:", error);
          setErrorMessage(error.response?.data?.error || "An unexpected error occurred. Please try again.");
+      }
+   };
+
+   const handleVerifyCode = async () => {
+      try {
+         // Send the verification code to the backend to confirm and create the user
+         const response = await axios.post("http://localhost:3001/verify-code", {
+            email: formData.email,
+            code,
+         });
+
+         console.log("Email verified successfully:", response.data); // TODO - add a dialog to show this message and button to go to login page
+         setFormData({ username: "", email: "", password: "" });
+         setVerificationStage(false);
+         setCode("");
+         setSuccessMessage("Verification complete. You may now log in.");
+      } catch (error) {
+         console.error("Error verifying code:", error);
+         setErrorMessage(error.response?.data?.error || "Verification failed. Please try again.");
       }
    };
 
@@ -59,12 +83,16 @@ function Register() {
                achieve your goals.
             </p>
          </div>
+
          <div className="register-right">
             <h2>Create an Account</h2>
+
             <button className="google-button">
                <i style={{ margin: "0 10px 0 0" }} className="fa-brands fa-google"></i>Continue with Google
             </button>
+
             <p className="divider">or</p>
+
             <form className="register-form" onSubmit={handleSubmit}>
                <div className="form-group">
                   <label htmlFor="username">Username</label>
@@ -74,8 +102,10 @@ function Register() {
                      placeholder="Enter your username"
                      value={formData.username}
                      onChange={handleInputChange}
+                     disabled={verificationStage}
                   />
                </div>
+
                <div className="form-group">
                   <label htmlFor="email">Email</label>
                   <input
@@ -84,8 +114,10 @@ function Register() {
                      placeholder="Enter your email"
                      value={formData.email}
                      onChange={handleInputChange}
+                     disabled={verificationStage}
                   />
                </div>
+
                <div className="form-group">
                   <label htmlFor="password">Password</label>
                   <input
@@ -94,13 +126,36 @@ function Register() {
                      placeholder="Enter your password"
                      value={formData.password}
                      onChange={handleInputChange}
+                     disabled={verificationStage}
                   />
                </div>
+
                {errorMessage && <p className="error-message">{errorMessage}</p>}
-               <button type="submit" className="submit-button">
-                  Create Account
-               </button>
+               {successMessage && <p className="success-message">{successMessage}</p>}
+
+               {!verificationStage && (
+                  <button type="submit" className="submit-button">
+                     Create Account
+                  </button>
+               )}
             </form>
+
+            {verificationStage && (
+               <div className="form-group verification-box">
+                  <label htmlFor="code">Enter 4-digit Code</label>
+                  <input
+                     type="text"
+                     id="code"
+                     placeholder="Enter the code sent to your email"
+                     value={code}
+                     onChange={(e) => setCode(e.target.value)}
+                  />
+                  <button type="button" className="submit-button" onClick={handleVerifyCode}>
+                     Verify Code
+                  </button>
+               </div>
+            )}
+
             <p className="no-account">
                Already have an account?{" "}
                <Link to="/login" className="register-link">
