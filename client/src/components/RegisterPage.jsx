@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../styles/AuthenticationPages.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function Register() {
@@ -14,6 +14,8 @@ function Register() {
    const [verificationStage, setVerificationStage] = useState(false);
    const [errorMessage, setErrorMessage] = useState("");
    const [successMessage, setSuccessMessage] = useState("");
+   const [showDialog, setShowDialog] = useState(false);
+   const navigate = useNavigate();
 
    const handleInputChange = (e) => {
       const { id, value } = e.target;
@@ -58,15 +60,22 @@ function Register() {
             code,
          });
 
-         console.log("Email verified successfully:", response.data); // TODO - add a dialog to show this message and button to go to login page
+         setShowDialog(true);
+
+         // Reset form data
          setFormData({ username: "", email: "", password: "" });
          setVerificationStage(false);
          setCode("");
-         setSuccessMessage("Verification complete. You may now log in.");
+         setSuccessMessage("");
       } catch (error) {
          console.error("Error verifying code:", error);
          setErrorMessage(error.response?.data?.error || "Verification failed. Please try again.");
       }
+   };
+
+   const handleDialogClose = () => {
+      setShowDialog(false);
+      navigate("/login");
    };
 
    return (
@@ -163,6 +172,18 @@ function Register() {
                </Link>
             </p>
          </div>
+
+         {showDialog && (
+            <div className="dialog-overlay">
+               <div className="dialog">
+                  <h2>Account Created Successfully!</h2>
+                  <p>You can now log in to your account.</p>
+                  <button className="submit-button" onClick={handleDialogClose}>
+                     Go to Login
+                  </button>
+               </div>
+            </div>
+         )}
       </div>
    );
 }
