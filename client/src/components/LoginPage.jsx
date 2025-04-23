@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "../styles/AuthenticationPages.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function LoginPage() {
    const [formData, setFormData] = useState({
@@ -8,6 +9,7 @@ function LoginPage() {
       password: "",
    });
    const [errorMessage, setErrorMessage] = useState("");
+   const navigate = useNavigate();
 
    const handleInputChange = (e) => {
       const { id, value } = e.target;
@@ -17,7 +19,7 @@ function LoginPage() {
       }));
    };
 
-   const handleSubmit = (e) => {
+   const handleSubmit = async (e) => {
       e.preventDefault();
       const { email, password } = formData;
 
@@ -26,9 +28,18 @@ function LoginPage() {
          return;
       }
 
-      // Clear
-      setErrorMessage("");
-      // TODO - API call to log in the user
+      try {
+         const response = await axios.post(
+            "http://localhost:3001/login",
+            { email, password },
+            { withCredentials: true }
+         );
+
+         // TODO - redirect to home page
+      } catch (error) {
+         console.error("Error during login:", error);
+         setErrorMessage(error.response?.data?.error || "An unexpected error occurred. Please try again.");
+      }
    };
 
    return (
@@ -48,7 +59,7 @@ function LoginPage() {
          <div className="register-right">
             <h2>Log In to Your Account</h2>
             <button className="google-button">
-               <i style={{ margin: "0 10px 0 0" }} class="fa-brands fa-google"></i>Continue with Google
+               <i style={{ margin: "0 10px 0 0" }} className="fa-brands fa-google"></i>Continue with Google
             </button>
             <p className="divider">or</p>
             <form className="register-form" onSubmit={handleSubmit}>
