@@ -4,11 +4,13 @@ import dotenv from "dotenv";
 import mysql from "mysql2";
 import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
 const db = mysql.createConnection({
    host: process.env.DB_HOST,
@@ -54,6 +56,8 @@ async function sendVerificationEmail(email, code) {
       text: `Your 2FA verification code is ${code}. It expires in 10 minutes.`,
    });
 }
+
+/* --------------------------------------------------------------------------------------------- */
 
 //* Register new user
 app.post("/register", async (req, res) => {
@@ -132,6 +136,51 @@ app.post("/verify-code", async (req, res) => {
       });
    } catch (err) {
       console.error("Error hashing password:", err);
+      res.status(500).json({ error: "Internal server error" });
+   }
+});
+
+//* Login user
+app.post("/login", async (req, res) => {
+   const { email, password } = req.body;
+
+   if (!email || !password) {
+      return res.status(400).json({ error: "Email and password are required" });
+   }
+
+   try {
+      // Check if the user exists
+      const query = "SELECT * FROM users WHERE email = ?";
+      db.query(query, [email], async (err, results) => {
+         if (err) {
+            console.error("Error fetching user:", err);
+            return res.status(500).json({ error: "Internal server error" });
+         }
+
+         if (results.length === 0) {
+            return res.status(401).json({ error: "Invalid email or password" });
+         }
+
+         const user = results[0];
+
+         // Compare the provided password with the hashed password in the database
+         const isPasswordValid = await bcrypt.compare(password, user.password);
+         if (!isPasswordValid) {
+            return res.status(401).json({ error: "Invalid email or password" });
+         }
+
+         // Generate a session cookie (or token) for the user
+         const sessionToken = Math.random().toString(36).substring(2) + Date.now().toString(36);
+         res.cookie("session_token", sessionToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            maxAge: 24 * 60 * 60 * 1000,
+         });
+
+         res.status(200).json({ message: "Login successful", user: { id: user.id, username: user.username } });
+      });
+   } catch (err) {
+      console.error("Error during login:", err);
       res.status(500).json({ error: "Internal server error" });
    }
 });
