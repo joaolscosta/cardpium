@@ -21,6 +21,10 @@ CREATE TABLE users (
    password VARCHAR(255) NOT NULL,
    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Insert a default user
+INSERT INTO users (username, email, password) VALUES
+('joao', 'joaoluissaraivacosta@gmail.com', '\$2b\$10\$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36Zf8a9OZxQH6h6FzF7z5W2');
 EOF
 
 npm install

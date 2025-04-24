@@ -191,5 +191,16 @@ app.post("/login", async (req, res) => {
    }
 });
 
+app.get("/auth-check", (req, res) => {
+   const sessionToken = req.cookies.session_token;
+
+   // TODO - Decide if store session tokens in DB or in memory
+
+   if (!sessionToken) {
+      return res.status(401).json({ error: "Unauthorized" });
+   }
+   res.status(200).json({ message: "Authenticated" });
+});
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

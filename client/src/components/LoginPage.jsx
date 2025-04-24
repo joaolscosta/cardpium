@@ -35,7 +35,9 @@ function LoginPage() {
             { withCredentials: true }
          );
 
-         // TODO - redirect to home page
+         if (response.status === 200) {
+            navigate("/home");
+         }
       } catch (error) {
          console.error("Error during login:", error);
          setErrorMessage(error.response?.data?.error || "An unexpected error occurred. Please try again.");
