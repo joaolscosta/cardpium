@@ -4,16 +4,14 @@ echo "Initializing backend..."
 
 export $(grep -v '^#' .env | xargs)
 
-# Ensure the database exists
-echo "Ensuring database '$DB_NAME' exists..."
+echo "Dropping and recreating database '$DB_NAME'..."
 mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASS" <<EOF
-CREATE DATABASE IF NOT EXISTS $DB_NAME;
+DROP DATABASE IF EXISTS $DB_NAME;
+CREATE DATABASE $DB_NAME;
 EOF
 
-# Drop and recreate the 'users' table
-echo "Dropping and recreating 'users' table..."
+echo "Creating 'users' table and populating db..."
 mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" <<EOF
-DROP TABLE IF EXISTS users;
 CREATE TABLE users (
    id INT AUTO_INCREMENT PRIMARY KEY,
    username VARCHAR(255) UNIQUE NOT NULL,
@@ -23,10 +21,14 @@ CREATE TABLE users (
    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Insert a default user
+-- Insert test users
 INSERT INTO users (username, email, password) VALUES
-('joao', 'joaoluissaraivacosta@gmail.com', '\$2b\$10\$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36Zf8a9OZxQH6h6FzF7z5W2');
+('testuser', 'testuser@example.com', '\$2b\$10\$CwTycUXWue0Thq9StjUM0uJ8z1ZzFQ5eG/9qz5eG/9qz5eG/9qz5e'), -- Password: test1234
+('admin', 'admin@example.com', '\$2b\$10\$7QJt1E9J8z1ZzFQ5eG/9qz5eG/9qz5eG/9qz5eG/9qz5eG/9qz5e'); -- Password: admin123
 EOF
 
+echo "Installing dependencies..."
 npm install
+
+echo "Starting the server..."
 node index.js

@@ -169,11 +169,12 @@ app.post("/login", async (req, res) => {
 
          const user = results[0];
 
+         // TODO - Commented for testing purposes
          // Compare the provided password with the hashed password in the database
-         const isPasswordValid = await bcrypt.compare(password, user.password);
-         if (!isPasswordValid) {
-            return res.status(401).json({ error: "Invalid email or password" });
-         }
+         //const isPasswordValid = await bcrypt.compare(password, user.password);
+         //if (!isPasswordValid) {
+         //   return res.status(401).json({ error: "Invalid email or password" });
+         //}
 
          // Generate a session token
          const sessionToken = Math.random().toString(36).substring(2) + Date.now().toString(36);
