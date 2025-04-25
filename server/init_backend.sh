@@ -20,11 +20,17 @@ CREATE TABLE users (
    session_id VARCHAR(255) DEFAULT NULL,
    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+CREATE TABLE verification_codes (
+   email VARCHAR(255) PRIMARY KEY,
+   code VARCHAR(10) NOT NULL,
+   expires_at BIGINT NOT NULL,
+   username VARCHAR(255) NOT NULL,
+   password VARCHAR(255) NOT NULL
+);
 
--- Insert test users
+-- Insert admin credentials
 INSERT INTO users (username, email, password) VALUES
-('testuser', 'testuser@example.com', '\$2b\$10\$CwTycUXWue0Thq9StjUM0uJ8z1ZzFQ5eG/9qz5eG/9qz5eG/9qz5e'), -- Password: test1234
-('admin', 'admin@example.com', '\$2b\$10\$7QJt1E9J8z1ZzFQ5eG/9qz5eG/9qz5eG/9qz5eG/9qz5eG/9qz5e'); -- Password: admin123
+('admin', 'admin@example.com', '\$2b\$10\$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36Zf4z8E9OZ8K2J7N6zYb7e'); -- Password: admin123
 EOF
 
 echo "Installing dependencies..."

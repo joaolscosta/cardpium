@@ -94,16 +94,31 @@ app.post("/register", async (req, res) => {
          // Generate and send the verification code
          const code = generateCode();
          const expiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes
-         verificationCodes.set(email, { code, expiresAt, username, password });
 
-         sendVerificationEmail(email, code)
-            .then(() => {
-               res.status(200).json({ message: "Verification code sent to your email." });
-            })
-            .catch((err) => {
-               console.error("Email send error:", err);
-               res.status(500).json({ error: "Failed to send verification code." });
-            });
+         const insertCodeQuery = `
+            INSERT INTO verification_codes (email, code, expires_at, username, password)
+            VALUES (?, ?, ?, ?, ?)
+            ON DUPLICATE KEY UPDATE code = ?, expires_at = ?, username = ?, password = ?
+         `;
+         db.query(
+            insertCodeQuery,
+            [email, code, expiresAt, username, password, code, expiresAt, username, password],
+            (err) => {
+               if (err) {
+                  console.error("Error storing verification code:", err);
+                  return res.status(500).json({ error: "Internal server error" });
+               }
+
+               sendVerificationEmail(email, code)
+                  .then(() => {
+                     res.status(200).json({ message: "Verification code sent to your email." });
+                  })
+                  .catch((err) => {
+                     console.error("Email send error:", err);
+                     res.status(500).json({ error: "Failed to send verification code." });
+                  });
+            }
+         );
       });
    } catch (err) {
       console.error("Error during registration:", err);
@@ -114,36 +129,57 @@ app.post("/register", async (req, res) => {
 //* Verify the 2FA code
 app.post("/verify-code", async (req, res) => {
    const { email, code } = req.body;
-   const entry = verificationCodes.get(email);
 
-   if (!entry) return res.status(400).json({ error: "No code sent" });
-   if (Date.now() > entry.expiresAt) {
-      verificationCodes.delete(email);
-      return res.status(400).json({ error: "Code expired" });
-   }
+   const selectCodeQuery = "SELECT * FROM verification_codes WHERE email = ?";
+   db.query(selectCodeQuery, [email], async (err, results) => {
+      if (err) {
+         console.error("Error fetching verification code:", err);
+         return res.status(500).json({ error: "Internal server error" });
+      }
 
-   if (entry.code !== code) return res.status(400).json({ error: "Invalid code" });
+      if (results.length === 0) {
+         return res.status(400).json({ error: "No code sent" });
+      }
 
-   // Create the user in the database
-   const { username, password } = entry;
-   try {
-      const saltRounds = 10;
-      const hashedPassword = await bcrypt.hash(password, saltRounds);
+      // Check if the code is expired
+      const entry = results[0];
+      if (Date.now() > entry.expires_at) {
+         const deleteCodeQuery = "DELETE FROM verification_codes WHERE email = ?";
+         db.query(deleteCodeQuery, [email], (err) => {
+            if (err) console.error("Error deleting expired code:", err);
+         });
+         return res.status(400).json({ error: "Code expired" });
+      }
 
-      const insertQuery = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
-      db.query(insertQuery, [username, email, hashedPassword], (err, result) => {
-         if (err) {
-            console.error("Error inserting user:", err);
-            return res.status(500).json({ error: "Failed to create user" });
-         }
+      if (entry.code !== code) {
+         return res.status(400).json({ error: "Invalid code" });
+      }
 
-         verificationCodes.delete(email);
-         res.status(201).json({ message: "User created successfully" });
-      });
-   } catch (err) {
-      console.error("Error hashing password:", err);
-      res.status(500).json({ error: "Internal server error" });
-   }
+      // Create the user in the database
+      const { username, password } = entry;
+      try {
+         const saltRounds = 10;
+         const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+         const insertQuery = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+         db.query(insertQuery, [username, email, hashedPassword], (err) => {
+            if (err) {
+               console.error("Error inserting user:", err);
+               return res.status(500).json({ error: "Failed to create user" });
+            }
+
+            const deleteCodeQuery = "DELETE FROM verification_codes WHERE email = ?";
+            db.query(deleteCodeQuery, [email], (err) => {
+               if (err) console.error("Error deleting used code:", err);
+            });
+
+            res.status(201).json({ message: "User created successfully" });
+         });
+      } catch (err) {
+         console.error("Error hashing password:", err);
+         res.status(500).json({ error: "Internal server error" });
+      }
+   });
 });
 
 //* Login user
