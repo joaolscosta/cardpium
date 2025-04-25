@@ -175,15 +175,26 @@ app.post("/login", async (req, res) => {
             return res.status(401).json({ error: "Invalid email or password" });
          }
 
-         // Generate a session cookie (or token) for the user
+         // Generate a session token
          const sessionToken = Math.random().toString(36).substring(2) + Date.now().toString(36);
-         res.cookie("session_token", sessionToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            maxAge: 24 * 60 * 60 * 1000,
-         });
 
-         res.status(200).json({ message: "Login successful", user: { id: user.id, username: user.username } });
+         // Store the session token in the database
+         const updateQuery = "UPDATE users SET session_id = ? WHERE id = ?";
+         db.query(updateQuery, [sessionToken, user.id], (err) => {
+            if (err) {
+               console.error("Error updating session ID:", err);
+               return res.status(500).json({ error: "Internal server error" });
+            }
+
+            // Set the session token as a cookie
+            res.cookie("session_token", sessionToken, {
+               httpOnly: true,
+               secure: process.env.NODE_ENV === "production",
+               maxAge: 24 * 60 * 60 * 1000, // 1 day
+            });
+
+            res.status(200).json({ message: "Login successful", user: { id: user.id, username: user.username } });
+         });
       });
    } catch (err) {
       console.error("Error during login:", err);
@@ -191,15 +202,50 @@ app.post("/login", async (req, res) => {
    }
 });
 
+//* Check if the user is authenticated
 app.get("/auth-check", (req, res) => {
    const sessionToken = req.cookies.session_token;
-
-   // TODO - Decide if store session tokens in DB or in memory
 
    if (!sessionToken) {
       return res.status(401).json({ error: "Unauthorized" });
    }
-   res.status(200).json({ message: "Authenticated" });
+
+   // Check if the session token exists in the database
+   const query = "SELECT * FROM users WHERE session_id = ?";
+   db.query(query, [sessionToken], (err, results) => {
+      if (err) {
+         console.error("Error checking session token:", err);
+         return res.status(500).json({ error: "Internal server error" });
+      }
+
+      if (results.length === 0) {
+         return res.status(401).json({ error: "Unauthorized" });
+      }
+
+      res.status(200).json({ message: "Authenticated", user: { id: results[0].id, username: results[0].username } });
+   });
+});
+
+//* Logout user
+app.post("/logout", (req, res) => {
+   const sessionToken = req.cookies.session_token;
+
+   if (!sessionToken) {
+      return res.status(400).json({ error: "No session token provided" });
+   }
+
+   // Clear the session token in the database
+   const query = "UPDATE users SET session_id = NULL WHERE session_id = ?";
+   db.query(query, [sessionToken], (err) => {
+      if (err) {
+         console.error("Error clearing session token:", err);
+         return res.status(500).json({ error: "Internal server error" });
+      }
+
+      // Clear the cookie
+      res.clearCookie("session_token");
+      res.status(200).json({ message: "Logout successful" });
+   });
 });
 
 const PORT = process.env.PORT || 3001;
