@@ -285,5 +285,31 @@ app.post("/logout", (req, res) => {
    });
 });
 
+/* ------------------------ User Data Fetching ------------------------ */
+
+//* Get logged-in user's information
+app.get("/user", (req, res) => {
+   const sessionToken = req.cookies.session_token;
+
+   if (!sessionToken) {
+      return res.status(401).json({ error: "Unauthorized" });
+   }
+
+   const query = "SELECT username, email FROM users WHERE session_id = ?";
+   db.query(query, [sessionToken], (err, results) => {
+      if (err) {
+         console.error("Error fetching user:", err);
+         return res.status(500).json({ error: "Internal server error" });
+      }
+
+      if (results.length === 0) {
+         return res.status(401).json({ error: "Unauthorized" });
+      }
+
+      const user = results[0];
+      res.status(200).json({ username: user.username, email: user.email });
+   });
+});
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -1,8 +1,8 @@
 .sidebar {
    background-color: #212121;
-   padding: 20px;
    width: 250px;
    height: 100vh;
+   padding: 0 20px;
    display: flex;
    flex-direction: column;
    top: 0;
@@ -16,6 +16,7 @@
 .sidebar-header {
    display: flex;
    justify-content: space-between;
+   margin: 10px 0;
 }
 
 .sidebar-logo {
@@ -54,7 +55,7 @@
    display: flex;
    flex-direction: column;
    margin: 20px 0;
-   gap: 17px;
+   gap: 10px;
 }
 
 .sidebar-feature {
@@ -65,4 +66,54 @@
    color: #807d7d;
    gap: 13px;
    font-size: 15px;
+   padding: 10px 15px;
+}
+
+.sidebar-feature:hover {
+   background-color: #2b2b2b;
+   color: rgb(231, 231, 231);
+}
+
+.sidebar-feature.selected {
+   background-color: #2b2b2b;
+   color: rgb(194, 194, 194);
+}
+
+/* User account section */
+.sidebar-user {
+   display: flex;
+   align-items: center;
+   padding: 15px;
+   margin-top: auto;
+   margin-bottom: 10px;
+}
+
+.user-avatar {
+   background-color: #519454;
+   color: white;
+   font-size: 18px;
+   font-weight: bold;
+   width: 40px;
+   height: 40px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   border-radius: 5px; /* Square with rounded corners */
+   margin-right: 10px;
+}
+
+.user-info {
+   display: flex;
+   flex-direction: column;
+   color: #d1d1d1;
+}
+
+.user-name {
+   font-size: 14px;
+   font-weight: bold;
+}
+
+.user-email {
+   font-size: 12px;
+   color: #a8a8a8;
 }

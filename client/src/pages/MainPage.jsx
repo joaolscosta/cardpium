@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Sidebar from "./Sidebar";
+import Sidebar from "../components/Sidebar";
 
 function MainPage() {
    const [isAuthenticated, setIsAuthenticated] = useState(false);
