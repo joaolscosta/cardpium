@@ -1,7 +1,7 @@
 .sidebar {
    background-color: #212121;
    padding: 20px;
-   width: 300px;
+   width: 250px;
    height: 100vh;
    display: flex;
    flex-direction: column;
@@ -48,4 +48,21 @@
 
 .open-button:hover {
    color: #a8a8a8;
+}
+
+.sidebar-features {
+   display: flex;
+   flex-direction: column;
+   margin: 20px 0;
+   gap: 17px;
+}
+
+.sidebar-feature {
+   display: flex;
+   align-items: center;
+   border-radius: 5px;
+   cursor: pointer;
+   color: #807d7d;
+   gap: 13px;
+   font-size: 15px;
 }

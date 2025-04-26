@@ -33,6 +33,28 @@ const Sidebar = () => {
                         <i class="fa-solid fa-arrow-left"></i>
                      </button>
                   </div>
+                  <div className="sidebar-features">
+                     <div className="sidebar-feature" onClick={handleNavigateHome}>
+                        <i class="fa-solid fa-house"></i>
+                        <span>Dashboard</span>
+                     </div>
+                     <div className="sidebar-feature">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Create</span>
+                     </div>
+                     <div className="sidebar-feature">
+                        <i class="fa-solid fa-folder"></i>
+                        <span>Browse</span>
+                     </div>
+                     <div className="sidebar-feature">
+                        <i class="fa-solid fa-cog"></i>
+                        <span>Settings</span>
+                     </div>
+                     <div className="sidebar-feature">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Logout</span>
+                     </div>
+                  </div>
                </div>
             </div>
          )}
