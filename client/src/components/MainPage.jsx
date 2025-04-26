@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Sidebar from "./Sidebar";
 
 function MainPage() {
    const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -35,7 +36,7 @@ function MainPage() {
 
    return (
       <div>
-         <h1>Home</h1>
+         <Sidebar />
       </div>
    );
 }
