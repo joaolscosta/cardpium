@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Sidebar from "../components/Sidebar";
+import "../styles/MainPage.css";
 
 function MainPage() {
    const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -35,8 +36,12 @@ function MainPage() {
    }
 
    return (
-      <div>
+      <div className="main-page">
          <Sidebar />
+         <div className="main-content">
+            <h1>Welcome to the Main Page</h1>
+            <p>This is the content area.</p>
+         </div>
       </div>
    );
 }
