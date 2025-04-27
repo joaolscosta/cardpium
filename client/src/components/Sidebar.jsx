@@ -3,9 +3,8 @@ import "../styles/Sidebar.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const Sidebar = () => {
+const Sidebar = ({ setSelectedFeature, selectedFeature }) => {
    const [isOpen, setIsOpen] = useState(true);
-   const [selectedFeature, setSelectedFeature] = useState("Dashboard");
    const [user, setUser] = useState({ name: "", email: "" });
    const navigate = useNavigate();
 
@@ -27,9 +26,8 @@ const Sidebar = () => {
       fetchUser();
    }, [navigate]);
 
-   const handleNavigate = (feature, path) => {
+   const handleNavigate = (feature) => {
       setSelectedFeature(feature);
-      navigate(path);
    };
 
    const handleToggleSidebar = () => {
@@ -50,7 +48,7 @@ const Sidebar = () => {
             <div className="sidebar">
                <div className="sidebar-content">
                   <div className="sidebar-header">
-                     <h1 className="sidebar-logo" onClick={() => handleNavigate("Dashboard", "/home")}>
+                     <h1 className="sidebar-logo" onClick={() => handleNavigate("Dashboard")}>
                         Cardpium.
                      </h1>
                      <button className="close-button" onClick={handleToggleSidebar}>
@@ -60,31 +58,31 @@ const Sidebar = () => {
                   <div className="sidebar-features">
                      <div
                         className={`sidebar-feature ${isSelected("Dashboard") ? "selected" : ""}`}
-                        onClick={() => handleNavigate("Dashboard", "/home")}>
+                        onClick={() => handleNavigate("Dashboard")}>
                         <i className="fa-solid fa-house"></i>
                         <span>Dashboard</span>
                      </div>
                      <div
                         className={`sidebar-feature ${isSelected("Create") ? "selected" : ""}`}
-                        onClick={() => handleNavigate("Create", "/home")}>
+                        onClick={() => handleNavigate("Create")}>
                         <i className="fa-solid fa-plus"></i>
                         <span>Create</span>
                      </div>
                      <div
                         className={`sidebar-feature ${isSelected("Browse") ? "selected" : ""}`}
-                        onClick={() => handleNavigate("Browse", "/home")}>
+                        onClick={() => handleNavigate("Browse")}>
                         <i className="fa-solid fa-folder"></i>
                         <span>Browse</span>
                      </div>
                      <div
                         className={`sidebar-feature ${isSelected("Settings") ? "selected" : ""}`}
-                        onClick={() => handleNavigate("Settings", "/home")}>
+                        onClick={() => handleNavigate("Settings")}>
                         <i className="fa-solid fa-cog"></i>
                         <span>Settings</span>
                      </div>
                      <div
                         className={`sidebar-feature ${isSelected("Logout") ? "selected" : ""}`}
-                        onClick={() => handleNavigate("Logout", "/home")}>
+                        onClick={() => handleNavigate("Logout")}>
                         <i className="fa-solid fa-right-from-bracket"></i>
                         <span>Logout</span>
                      </div>

@@ -2,11 +2,16 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Sidebar from "../components/Sidebar";
+import Dashboard from "../components/Dashboard";
+import Browse from "../components/Browse";
+import Create from "../components/Create";
+import Settings from "../components/Settings";
 import "../styles/MainPage.css";
 
 function MainPage() {
    const [isAuthenticated, setIsAuthenticated] = useState(false);
    const [loading, setLoading] = useState(true);
+   const [selectedFeature, setSelectedFeature] = useState("Dashboard");
    const navigate = useNavigate();
 
    useEffect(() => {
@@ -35,13 +40,27 @@ function MainPage() {
       return null; // Prevent rendering if not authenticated
    }
 
+   const renderContent = () => {
+      switch (selectedFeature) {
+         case "Dashboard":
+            return <Dashboard />;
+         case "Browse":
+            return <Browse />;
+         case "Create":
+            return <Create />;
+         case "Settings":
+            return <Settings />;
+         case "Logout":
+            return;
+         default:
+            return <h1>404 - Not Found</h1>;
+      }
+   };
+
    return (
       <div className="main-page">
-         <Sidebar />
-         <div className="main-content">
-            <h1>Welcome to the Main Page</h1>
-            <p>This is the content area.</p>
-         </div>
+         <Sidebar setSelectedFeature={setSelectedFeature} selectedFeature={selectedFeature} />
+         <div className="main-content">{renderContent()}</div>
       </div>
    );
 }
