@@ -311,5 +311,135 @@ app.get("/user", (req, res) => {
    });
 });
 
+/* ------------------------ Decks and Flashcards ------------------------ */
+
+//* Get all decks for the logged-in user
+app.get("/decks", (req, res) => {
+   const sessionToken = req.cookies.session_token;
+
+   if (!sessionToken) {
+      return res.status(401).json({ error: "Unauthorized" });
+   }
+
+   // Find the user based on the session token
+   const userQuery = "SELECT id FROM users WHERE session_id = ?";
+   db.query(userQuery, [sessionToken], (err, results) => {
+      if (err) {
+         console.error("Error fetching user:", err);
+         return res.status(500).json({ error: "Internal server error" });
+      }
+
+      if (results.length === 0) {
+         return res.status(401).json({ error: "Unauthorized" });
+      }
+
+      const userId = results[0].id;
+
+      // Fetch decks for the logged-in user
+      const decksQuery = "SELECT * FROM decks WHERE user_id = ?";
+      db.query(decksQuery, [userId], (err, decks) => {
+         if (err) {
+            console.error("Error fetching decks:", err);
+            return res.status(500).json({ error: "Internal server error" });
+         }
+
+         res.status(200).json(decks);
+      });
+   });
+});
+
+//* Add a new deck for the logged-in user
+app.post("/decks", (req, res) => {
+   const sessionToken = req.cookies.session_token;
+   const { name } = req.body;
+
+   if (!sessionToken) {
+      return res.status(401).json({ error: "Unauthorized" });
+   }
+
+   if (!name) {
+      return res.status(400).json({ error: "Deck name is required" });
+   }
+
+   // Find the user based on the session token
+   const userQuery = "SELECT id FROM users WHERE session_id = ?";
+   db.query(userQuery, [sessionToken], (err, results) => {
+      if (err) {
+         console.error("Error fetching user:", err);
+         return res.status(500).json({ error: "Internal server error" });
+      }
+
+      if (results.length === 0) {
+         return res.status(401).json({ error: "Unauthorized" });
+      }
+
+      const userId = results[0].id;
+
+      // Insert the new deck for the logged-in user
+      const insertDeckQuery = "INSERT INTO decks (name, user_id) VALUES (?, ?)";
+      db.query(insertDeckQuery, [name, userId], (err, results) => {
+         if (err) {
+            console.error("Error adding deck:", err);
+            return res.status(500).json({ error: "Internal server error" });
+         }
+
+         res.status(201).json({ id: results.insertId, name });
+      });
+   });
+});
+
+//* Add a new flashcard for a deck owned by the logged-in user
+app.post("/flashcards", (req, res) => {
+   const sessionToken = req.cookies.session_token;
+   const { front, back, deckId } = req.body;
+
+   if (!sessionToken) {
+      return res.status(401).json({ error: "Unauthorized" });
+   }
+
+   if (!front || !back || !deckId) {
+      return res.status(400).json({ error: "All fields are required" });
+   }
+
+   // Find the user based on the session token
+   const userQuery = "SELECT id FROM users WHERE session_id = ?";
+   db.query(userQuery, [sessionToken], (err, results) => {
+      if (err) {
+         console.error("Error fetching user:", err);
+         return res.status(500).json({ error: "Internal server error" });
+      }
+
+      if (results.length === 0) {
+         return res.status(401).json({ error: "Unauthorized" });
+      }
+
+      const userId = results[0].id;
+
+      // Verify that the deck belongs to the logged-in user
+      const deckQuery = "SELECT * FROM decks WHERE id = ? AND user_id = ?";
+      db.query(deckQuery, [deckId, userId], (err, results) => {
+         if (err) {
+            console.error("Error verifying deck ownership:", err);
+            return res.status(500).json({ error: "Internal server error" });
+         }
+
+         if (results.length === 0) {
+            return res.status(403).json({ error: "Forbidden: You do not own this deck" });
+         }
+
+         // Insert the new flashcard into the deck
+         const insertFlashcardQuery = "INSERT INTO flashcards (front, back, deck_id) VALUES (?, ?, ?)";
+         db.query(insertFlashcardQuery, [front, back, deckId], (err) => {
+            if (err) {
+               console.error("Error adding flashcard:", err);
+               return res.status(500).json({ error: "Internal server error" });
+            }
+
+            res.status(201).json({ message: "Flashcard created successfully" });
+         });
+      });
+   });
+});
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
