@@ -1,0 +1,38 @@
+.flashcard {
+   padding: 20px;
+   margin: 20px auto;
+   max-width: 600px;
+   background-color: #2b2b2b;
+   border-radius: 10px;
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+   color: white;
+   text-align: center;
+}
+
+.flashcard-front,
+.flashcard-back {
+   font-size: 18px;
+   margin: 10px 0;
+}
+
+.study-buttons {
+   display: flex;
+   justify-content: center;
+   gap: 10px;
+   margin-top: 20px;
+}
+
+.study-buttons button {
+   padding: 10px 20px;
+   font-size: 16px;
+   background-color: #4caf50;
+   color: white;
+   border: none;
+   border-radius: 5px;
+   cursor: pointer;
+   transition: background-color 0.3s ease;
+}
+
+.study-buttons button:hover {
+   background-color: #45a049;
+}

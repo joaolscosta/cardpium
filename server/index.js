@@ -441,5 +441,58 @@ app.post("/flashcards", (req, res) => {
    });
 });
 
+//* Get all flashcards for a specific deck
+app.get("/flashcards", (req, res) => {
+   const sessionToken = req.cookies.session_token;
+   const { deckId } = req.query;
+
+   if (!sessionToken) {
+      return res.status(401).json({ error: "Unauthorized" });
+   }
+
+   if (!deckId) {
+      return res.status(400).json({ error: "Deck ID is required" });
+   }
+
+   // Find the user based on the session token
+   const userQuery = "SELECT id FROM users WHERE session_id = ?";
+   db.query(userQuery, [sessionToken], (err, results) => {
+      if (err) {
+         console.error("Error fetching user:", err);
+         return res.status(500).json({ error: "Internal server error" });
+      }
+
+      if (results.length === 0) {
+         return res.status(401).json({ error: "Unauthorized" });
+      }
+
+      const userId = results[0].id;
+
+      // Verify that the deck belongs to the logged-in user
+      const deckQuery = "SELECT * FROM decks WHERE id = ? AND user_id = ?";
+      db.query(deckQuery, [deckId, userId], (err, results) => {
+         if (err) {
+            console.error("Error verifying deck ownership:", err);
+            return res.status(500).json({ error: "Internal server error" });
+         }
+
+         if (results.length === 0) {
+            return res.status(403).json({ error: "Forbidden: You do not own this deck" });
+         }
+
+         // Fetch flashcards for the deck
+         const flashcardsQuery = "SELECT * FROM flashcards WHERE deck_id = ?";
+         db.query(flashcardsQuery, [deckId], (err, flashcards) => {
+            if (err) {
+               console.error("Error fetching flashcards:", err);
+               return res.status(500).json({ error: "Internal server error" });
+            }
+
+            res.status(200).json(flashcards);
+         });
+      });
+   });
+});
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

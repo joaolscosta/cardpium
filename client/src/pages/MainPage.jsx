@@ -6,12 +6,14 @@ import Dashboard from "../components/Dashboard";
 import Browse from "../components/Browse";
 import Create from "../components/Create";
 import Settings from "../components/Settings";
+import StudyDeck from "../components/StudyDeck";
 import "../styles/MainPage.css";
 
 function MainPage() {
    const [isAuthenticated, setIsAuthenticated] = useState(false);
    const [loading, setLoading] = useState(true);
    const [selectedFeature, setSelectedFeature] = useState("Dashboard");
+   const [studyDeckId, setStudyDeckId] = useState(null);
    const navigate = useNavigate();
 
    useEffect(() => {
@@ -37,19 +39,36 @@ function MainPage() {
    }
 
    if (!isAuthenticated) {
-      return null; // Prevent rendering if not authenticated
+      return null;
    }
 
    const renderContent = () => {
       switch (selectedFeature) {
          case "Dashboard":
-            return <Dashboard />;
+            return (
+               <Dashboard
+                  setStudyDeckId={(deckId) => {
+                     setStudyDeckId(deckId);
+                     setSelectedFeature("StudyDeck");
+                  }}
+               />
+            );
          case "Browse":
             return <Browse />;
          case "Create":
             return <Create />;
          case "Settings":
             return <Settings />;
+         case "StudyDeck":
+            return (
+               <StudyDeck
+                  deckId={studyDeckId}
+                  setStudyDeckId={(deckId) => {
+                     setStudyDeckId(null);
+                     setSelectedFeature("Dashboard");
+                  }}
+               />
+            );
          case "Logout":
             return;
          default:

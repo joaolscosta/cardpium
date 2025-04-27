@@ -1,0 +1,60 @@
+.dashboard-title {
+   font-size: 28px;
+   margin-bottom: 20px;
+   color: #ffffff;
+}
+
+.dashboard-deck-list {
+   display: flex;
+   flex-direction: column;
+   gap: 10px;
+   width: 100%;
+   max-width: 600px;
+   margin: 100px auto 30px auto;
+   padding: 0;
+   list-style: none;
+}
+
+.dashboard-deck-item {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   padding: 5px 20px;
+   background-color: #252525;
+   border-radius: 8px;
+   transition: background-color ease;
+}
+
+.dashboard-deck-item:hover {
+   background-color: #292929;
+}
+
+.deck-name {
+   font-size: 14px;
+   font-weight: bold;
+   color: #ffffff;
+}
+
+.study-button {
+   background-color: #4caf50;
+   color: white;
+   padding: 8px 16px;
+   border: none;
+   border-radius: 5px;
+   font-size: 14px;
+   font-weight: 500;
+   cursor: pointer;
+   transition: background-color ease;
+}
+
+.study-button:hover {
+   background-color: #5bc75e;
+}
+
+.dashboard-loading,
+.dashboard-empty {
+   text-align: center;
+   font-size: 16px;
+   color: #b0b0b0;
+   margin: 100px 0;
+}
