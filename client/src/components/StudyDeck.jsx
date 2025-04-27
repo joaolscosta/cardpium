@@ -58,9 +58,7 @@ const StudyDeck = ({ deckId, setStudyDeckId }) => {
       <div>
          <h1>Study Deck</h1>
          <div className="flashcard">
-            <p className="flashcard-front">
-               <strong>Question:</strong> {currentCard.front}
-            </p>
+            <p className="flashcard-front">{currentCard.front}</p>
             {showAnswer && (
                <p className="flashcard-back">
                   <strong>Answer:</strong> {currentCard.back}
@@ -74,7 +72,6 @@ const StudyDeck = ({ deckId, setStudyDeckId }) => {
                <button onClick={handleNextQuestion}>Next Question</button>
             )}
          </div>
-         <button onClick={() => setStudyDeckId(null)}>Back to Dashboard</button>
       </div>
    );
 };
