@@ -7,6 +7,7 @@ const Sidebar = ({ setSelectedFeature, selectedFeature }) => {
    const [isOpen, setIsOpen] = useState(true);
    const [user, setUser] = useState({ name: "", email: "" });
    const navigate = useNavigate();
+   const [logoutDialog, setLogoutDialog] = useState(false);
 
    useEffect(() => {
       // Fetch the logged-in user's information
@@ -35,6 +36,16 @@ const Sidebar = ({ setSelectedFeature, selectedFeature }) => {
    };
 
    const isSelected = (feature) => selectedFeature === feature;
+
+   const handleLogout = async () => {
+      try {
+         await axios.post("http://localhost:3001/logout", {}, { withCredentials: true });
+         window.location.href = "/login";
+      } catch (error) {
+         console.error("Error logging out:", error);
+         alert("Failed to log out. Please try again.");
+      }
+   };
 
    return (
       <>
@@ -82,12 +93,29 @@ const Sidebar = ({ setSelectedFeature, selectedFeature }) => {
                      </div>
                      <div
                         className={`sidebar-feature ${isSelected("Logout") ? "selected" : ""}`}
-                        onClick={() => handleNavigate("Logout")}>
+                        onClick={() => setLogoutDialog(true)}>
                         <i className="fa-solid fa-right-from-bracket"></i>
                         <span>Logout</span>
                      </div>
                   </div>
                </div>
+
+               {logoutDialog && (
+                  <div className="logout-dialog-overlay">
+                     <div className="logout-dialog">
+                        <h2>Confirm Logout</h2>
+                        <p>Are you sure you want to log out?</p>
+                        <div className="dialog-actions">
+                           <button className="confirm-button" onClick={handleLogout}>
+                              Yes, Logout
+                           </button>
+                           <button className="cancel-button" onClick={() => setLogoutDialog(false)}>
+                              Cancel
+                           </button>
+                        </div>
+                     </div>
+                  </div>
+               )}
 
                <div className="sidebar-user">
                   <div className="user-avatar">{user.name[0]}</div>

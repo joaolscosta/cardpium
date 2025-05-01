@@ -35,7 +35,7 @@ function MainPage() {
    }, [navigate]);
 
    if (loading) {
-      return <p>Loading...</p>;
+      return <p className="loading">Loading...</p>;
    }
 
    if (!isAuthenticated) {
