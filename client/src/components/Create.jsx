@@ -85,7 +85,6 @@ const Create = () => {
          .then(() => {
             setFront("");
             setBack("");
-            setSelectedDeck("");
             setErrorMessage("");
          })
          .catch((error) => {
@@ -132,7 +131,9 @@ const Create = () => {
          </form>
          {errorMessage && <p className="error-message">{errorMessage}</p>}
          <div className="create-buttons">
-            <button onClick={handleCreateFlashcard}>Create Flashcard</button>
+            <button onClick={handleCreateFlashcard}>
+               <i class="fa-solid fa-plus"></i>
+            </button>
             <button onClick={() => setShowDialog(true)}>Add New Deck</button>
          </div>
 

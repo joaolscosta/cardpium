@@ -1,10 +1,13 @@
-.dashboard-title {
+.browse-container {
+   color: white;
+}
+
+.browse-title {
    font-size: 28px;
-   margin-bottom: 20px;
    color: #ffffff;
 }
 
-.dashboard-deck-list {
+.browse-deck-list {
    display: flex;
    flex-direction: column;
    gap: 10px;
@@ -15,7 +18,7 @@
    list-style: none;
 }
 
-.dashboard-deck-item {
+.browse-deck-item {
    display: flex;
    justify-content: space-between;
    align-items: center;
@@ -25,7 +28,7 @@
    transition: background-color ease;
 }
 
-.dashboard-deck-item:hover {
+.browse-deck-item:hover {
    background-color: #292929;
 }
 
@@ -35,7 +38,13 @@
    color: #ffffff;
 }
 
-.study-button {
+.deck-actions {
+   display: flex;
+   gap: 10px;
+}
+
+.enter-button,
+.remove-button {
    background-color: #519454;
    color: white;
    padding: 8px 16px;
@@ -44,15 +53,21 @@
    font-size: 14px;
    font-weight: 500;
    cursor: pointer;
-   transition: background-color ease;
 }
 
-.study-button:hover {
+.remove-button {
+   background-color: #ca3b30;
+}
+
+.enter-button:hover {
    background-color: #61ac65;
 }
 
-.dashboard-loading,
-.dashboard-empty {
+.remove-button:hover {
+   background-color: #d84c43;
+}
+
+.browse-loading {
    text-align: center;
    font-size: 16px;
    color: #b0b0b0;
