@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../styles/Library.css";
 
-const Library = () => {
+const Library = ({ setSelectedFeature }) => {
    const [decks, setDecks] = useState([]);
    const [selectedDeckId, setSelectedDeckId] = useState(null);
    const [flashcards, setFlashcards] = useState([]);
@@ -111,6 +111,20 @@ const Library = () => {
 
    if (loading) {
       return <p className="browse-loading">Loading...</p>;
+   }
+
+   if (decks.length === 0) {
+      return (
+         <div>
+            <h1 className="dashboard-title">Your Decks</h1>
+            <div className="dashboard-empty-container">
+               <p className="dashboard-empty">No decks available. Create one to get started!</p>
+               <button className="create-deck-button" onClick={() => setSelectedFeature("Create")}>
+                  Create Deck
+               </button>
+            </div>
+         </div>
+      );
    }
 
    if (!selectedDeckId) {

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../styles/Dashboard.css";
 
-const Dashboard = ({ setStudyDeckId }) => {
+const Dashboard = ({ setStudyDeckId, setSelectedFeature }) => {
    const [decks, setDecks] = useState([]);
    const [loading, setLoading] = useState(true);
 
@@ -29,7 +29,12 @@ const Dashboard = ({ setStudyDeckId }) => {
       return (
          <div>
             <h1 className="dashboard-title">Your Decks</h1>
-            <p className="dashboard-empty">No decks available. Create one to get started!</p>
+            <div className="dashboard-empty-container">
+               <p className="dashboard-empty">No decks available. Create one to start studying!</p>
+               <button className="create-deck-button" onClick={() => setSelectedFeature("Create")}>
+                  Create Deck
+               </button>
+            </div>
          </div>
       );
    }

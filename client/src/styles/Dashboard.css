@@ -4,6 +4,27 @@
    color: #ffffff;
 }
 
+.dashboard-empty-container {
+   text-align: center;
+   margin: 80px 0;
+}
+
+.create-deck-button {
+   background-color: #519454;
+   color: white;
+   padding: 10px 20px;
+   margin: 20px auto;
+   font-size: 14px;
+   font-weight: bold;
+   border: none;
+   border-radius: 5px;
+   cursor: pointer;
+}
+
+.create-deck-button:hover {
+   background-color: #61a164;
+}
+
 .dashboard-deck-list {
    display: flex;
    flex-direction: column;
@@ -51,8 +72,7 @@
    background-color: #61ac65;
 }
 
-.dashboard-loading,
-.dashboard-empty {
+.dashboard-loading {
    text-align: center;
    font-size: 16px;
    color: #b0b0b0;

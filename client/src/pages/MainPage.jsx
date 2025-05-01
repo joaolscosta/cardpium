@@ -51,10 +51,11 @@ function MainPage() {
                      setStudyDeckId(deckId);
                      setSelectedFeature("StudyDeck");
                   }}
+                  setSelectedFeature={setSelectedFeature}
                />
             );
          case "Library":
-            return <Library />;
+            return <Library setSelectedFeature={setSelectedFeature} />;
          case "Create":
             return <Create />;
          case "Settings":
