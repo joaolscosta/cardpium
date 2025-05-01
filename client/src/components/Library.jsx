@@ -8,6 +8,7 @@ const Library = () => {
    const [flashcards, setFlashcards] = useState([]);
    const [loading, setLoading] = useState(true);
    const [editDialog, setEditDialog] = useState({ isOpen: false, flashcard: null });
+   const [deleteDialog, setDeleteDialog] = useState({ isOpen: false, deckId: null });
 
    useEffect(() => {
       const fetchDecks = async () => {
@@ -39,6 +40,18 @@ const Library = () => {
       }
    };
 
+   const handleRemoveDeck = async () => {
+      const { deckId } = deleteDialog;
+      try {
+         await axios.delete(`http://localhost:3001/decks/${deckId}`, { withCredentials: true });
+         setDecks(decks.filter((deck) => deck.id !== deckId));
+         handleCloseDeleteDialog();
+      } catch (error) {
+         console.error("Error deleting deck:", error);
+         alert("Failed to delete the deck. Please try again.");
+      }
+   };
+
    const handleRemoveFlashcard = async (flashcardId) => {
       if (!window.confirm("Are you sure you want to delete this flashcard?")) {
          return;
@@ -59,6 +72,14 @@ const Library = () => {
 
    const handleCloseEditDialog = () => {
       setEditDialog({ isOpen: false, flashcard: null });
+   };
+
+   const handleOpenDeleteDialog = (deckId) => {
+      setDeleteDialog({ isOpen: true, deckId });
+   };
+
+   const handleCloseDeleteDialog = () => {
+      setDeleteDialog({ isOpen: false, deckId: null });
    };
 
    const handleEditFlashcard = async () => {
@@ -95,12 +116,32 @@ const Library = () => {
                      <h3 className="deck-name">{deck.name}</h3>
                      <div className="deck-actions">
                         <button className="enter-button" onClick={() => handleEnterDeck(deck.id)}>
-                           Enter
+                           <i class="fa-solid fa-right-to-bracket"></i>
+                        </button>
+                        <button className="remove-button" onClick={() => handleOpenDeleteDialog(deck.id)}>
+                           <i class="fa-solid fa-trash"></i>
                         </button>
                      </div>
                   </li>
                ))}
             </ul>
+
+            {deleteDialog.isOpen && (
+               <div className="delete-dialog-overlay">
+                  <div className="delete-dialog">
+                     <h2>Confirm Deletion</h2>
+                     <p>Are you sure you want to delete this deck and all its flashcards?</p>
+                     <div className="dialog-actions">
+                        <button className="confirm-button" onClick={handleRemoveDeck}>
+                           Yes, Delete
+                        </button>
+                        <button className="cancel-button" onClick={handleCloseDeleteDialog}>
+                           Cancel
+                        </button>
+                     </div>
+                  </div>
+               </div>
+            )}
          </div>
       );
    }

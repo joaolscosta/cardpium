@@ -174,16 +174,16 @@
    cursor: pointer;
 }
 
-.remove-button {
-   background-color: #f44336;
-}
-
 .customize-button:hover {
    background-color: #45a049;
 }
 
+.remove-button {
+   background-color: #f44336;
+}
+
 .remove-button:hover {
-   background-color: #d32f2f;
+   background-color: rgb(238, 86, 86);
 }
 
 .edit-dialog {
@@ -198,7 +198,6 @@
    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
    width: 90%;
    max-width: 400px;
-   z-index: 1000;
 }
 
 .edit-dialog h2 {
@@ -240,7 +239,6 @@
    border: none;
    border-radius: 5px;
    cursor: pointer;
-   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .edit-dialog button:first-of-type {
@@ -273,5 +271,73 @@
    width: 100%;
    height: 100%;
    background-color: rgba(0, 0, 0, 0.5);
-   z-index: 999;
+}
+
+.delete-dialog-overlay {
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   background-color: rgba(0, 0, 0, 0.5);
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.delete-dialog {
+   background-color: #2b2b2b;
+   color: white;
+   padding: 20px;
+   border-radius: 10px;
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+   text-align: center;
+   width: 90%;
+   max-width: 400px;
+}
+
+.delete-dialog h2 {
+   margin-top: 0;
+   font-size: 24px;
+}
+
+.delete-dialog p {
+   font-size: 16px;
+   margin: 15px 0;
+}
+
+.dialog-actions {
+   display: flex;
+   justify-content: space-between;
+   gap: 10px;
+}
+
+.confirm-button {
+   background-color: #f44336;
+   color: white;
+   padding: 10px 20px;
+   border: none;
+   border-radius: 5px;
+   cursor: pointer;
+   font-size: 14px;
+   font-weight: bold;
+}
+
+.confirm-button:hover {
+   background-color: rgb(218, 79, 79);
+}
+
+.cancel-button {
+   background-color: #4caf50;
+   color: white;
+   padding: 10px 20px;
+   border: none;
+   border-radius: 5px;
+   cursor: pointer;
+   font-size: 14px;
+   font-weight: bold;
+}
+
+.cancel-button:hover {
+   background-color: #57aa5b;
 }
