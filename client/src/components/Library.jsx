@@ -9,6 +9,7 @@ const Library = () => {
    const [loading, setLoading] = useState(true);
    const [editDialog, setEditDialog] = useState({ isOpen: false, flashcard: null });
    const [deleteDialog, setDeleteDialog] = useState({ isOpen: false, deckId: null });
+   const [deleteFlashcardDialog, setDeleteFlashcardDialog] = useState({ isOpen: false, flashcardId: null });
 
    useEffect(() => {
       const fetchDecks = async () => {
@@ -52,17 +53,15 @@ const Library = () => {
       }
    };
 
-   const handleRemoveFlashcard = async (flashcardId) => {
-      if (!window.confirm("Are you sure you want to delete this flashcard?")) {
-         return;
-      }
-
+   const handleRemoveFlashcard = async () => {
+      const { flashcardId } = deleteFlashcardDialog;
       try {
          await axios.delete(`http://localhost:3001/flashcards/${flashcardId}`, { withCredentials: true });
          setFlashcards(flashcards.filter((flashcard) => flashcard.id !== flashcardId));
+         handleCloseDeleteFlashcardDialog();
       } catch (error) {
          console.error("Error deleting flashcard:", error);
-         alert("Failed to delete the flashcard. Please try again."); // TODO - Switch to dialog
+         alert("Failed to delete the flashcard. Please try again.");
       }
    };
 
@@ -80,6 +79,14 @@ const Library = () => {
 
    const handleCloseDeleteDialog = () => {
       setDeleteDialog({ isOpen: false, deckId: null });
+   };
+
+   const handleOpenDeleteFlashcardDialog = (flashcardId) => {
+      setDeleteFlashcardDialog({ isOpen: true, flashcardId });
+   };
+
+   const handleCloseDeleteFlashcardDialog = () => {
+      setDeleteFlashcardDialog({ isOpen: false, flashcardId: null });
    };
 
    const handleEditFlashcard = async () => {
@@ -167,8 +174,8 @@ const Library = () => {
                      <button className="customize-button" onClick={() => handleOpenEditDialog(flashcard)}>
                         <i class="fa-solid fa-pen-to-square"></i>
                      </button>
-                     <button className="remove-button" onClick={() => handleRemoveFlashcard(flashcard.id)}>
-                        <i class="fa-solid fa-trash"></i>
+                     <button className="remove-button" onClick={() => handleOpenDeleteFlashcardDialog(flashcard.id)}>
+                        <i className="fa-solid fa-trash"></i>
                      </button>
                   </div>
                </li>
@@ -223,6 +230,22 @@ const Library = () => {
                         </button>
                      </div>
                   </form>
+               </div>
+            </div>
+         )}
+         {deleteFlashcardDialog.isOpen && (
+            <div className="delete-dialog-overlay">
+               <div className="delete-dialog">
+                  <h2>Confirm Deletion</h2>
+                  <p>Are you sure you want to delete this flashcard?</p>
+                  <div className="dialog-actions">
+                     <button className="confirm-button" onClick={handleRemoveFlashcard}>
+                        Yes, Delete
+                     </button>
+                     <button className="cancel-button" onClick={handleCloseDeleteFlashcardDialog}>
+                        Cancel
+                     </button>
+                  </div>
                </div>
             </div>
          )}

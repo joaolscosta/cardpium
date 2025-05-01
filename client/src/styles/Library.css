@@ -319,12 +319,15 @@
 
 .dialog-actions {
    display: flex;
-   justify-content: space-between;
+   justify-content: center;
    gap: 10px;
+   width: 100%;
+   max-width: 300px;
+   margin: 0 auto;
 }
 
 .confirm-button {
-   background-color: #f44336;
+   background-color: #e44b40;
    color: white;
    padding: 10px 20px;
    border: none;
@@ -335,11 +338,11 @@
 }
 
 .confirm-button:hover {
-   background-color: rgb(218, 79, 79);
+   background-color: rgb(218, 60, 60);
 }
 
 .cancel-button {
-   background-color: #4caf50;
+   background-color: #519454;
    color: white;
    padding: 10px 20px;
    border: none;
@@ -350,5 +353,5 @@
 }
 
 .cancel-button:hover {
-   background-color: #57aa5b;
+   background-color: #63a867;
 }
