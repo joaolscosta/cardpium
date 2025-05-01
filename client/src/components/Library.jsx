@@ -165,10 +165,10 @@ const Library = () => {
                   </div>
                   <div className="flashcard-actions">
                      <button className="customize-button" onClick={() => handleOpenEditDialog(flashcard)}>
-                        Edit
+                        <i class="fa-solid fa-pen-to-square"></i>
                      </button>
                      <button className="remove-button" onClick={() => handleRemoveFlashcard(flashcard.id)}>
-                        Remove
+                        <i class="fa-solid fa-trash"></i>
                      </button>
                   </div>
                </li>
@@ -176,36 +176,54 @@ const Library = () => {
          </ul>
 
          {editDialog.isOpen && (
-            <div className="edit-dialog">
-               <h2>Edit Flashcard</h2>
-               <label>
-                  Front:
-                  <input
-                     type="text"
-                     value={editDialog.flashcard.front}
-                     onChange={(e) =>
-                        setEditDialog({
-                           ...editDialog,
-                           flashcard: { ...editDialog.flashcard, front: e.target.value },
-                        })
-                     }
-                  />
-               </label>
-               <label>
-                  Back:
-                  <input
-                     type="text"
-                     value={editDialog.flashcard.back}
-                     onChange={(e) =>
-                        setEditDialog({
-                           ...editDialog,
-                           flashcard: { ...editDialog.flashcard, back: e.target.value },
-                        })
-                     }
-                  />
-               </label>
-               <button onClick={handleEditFlashcard}>Save</button>
-               <button onClick={handleCloseEditDialog}>Cancel</button>
+            <div className="edit-dialog-overlay">
+               <div className="edit-dialog">
+                  <h2>Edit Flashcard</h2>
+                  <form
+                     onSubmit={(e) => {
+                        e.preventDefault();
+                        handleEditFlashcard();
+                     }}>
+                     <label htmlFor="front-text">
+                        Front:
+                        <input
+                           id="front-text"
+                           type="text"
+                           value={editDialog.flashcard.front}
+                           onChange={(e) =>
+                              setEditDialog({
+                                 ...editDialog,
+                                 flashcard: { ...editDialog.flashcard, front: e.target.value },
+                              })
+                           }
+                           required
+                        />
+                     </label>
+                     <label htmlFor="back-text">
+                        Back:
+                        <input
+                           id="back-text"
+                           type="text"
+                           value={editDialog.flashcard.back}
+                           onChange={(e) =>
+                              setEditDialog({
+                                 ...editDialog,
+                                 flashcard: { ...editDialog.flashcard, back: e.target.value },
+                              })
+                           }
+                           required
+                        />
+                     </label>
+                     <div className="dialog-actions">
+                        <button type="submit" className="save-button">
+                           Save
+                        </button>
+                        <button type="button" className="cancel-button" onClick={handleCloseEditDialog}>
+                           Cancel
+                        </button>
+                     </div>
+                  </form>
+               </div>
             </div>
          )}
       </div>
