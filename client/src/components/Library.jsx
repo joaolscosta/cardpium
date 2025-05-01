@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "../styles/Browse.css";
+import "../styles/Library.css";
 
-const Browse = () => {
+const Library = () => {
    const [decks, setDecks] = useState([]);
    const [selectedDeckId, setSelectedDeckId] = useState(null);
    const [flashcards, setFlashcards] = useState([]);
@@ -88,7 +88,7 @@ const Browse = () => {
    if (!selectedDeckId) {
       return (
          <div className="browse-container">
-            <h1 className="browse-title">Available Decks</h1>
+            <h1 className="browse-title">Library</h1>
             <ul className="browse-deck-list">
                {decks.map((deck) => (
                   <li key={deck.id} className="browse-deck-item">
@@ -171,4 +171,4 @@ const Browse = () => {
    );
 };
 
-export default Browse;
+export default Library;

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Sidebar from "../components/Sidebar";
 import Dashboard from "../components/Dashboard";
-import Browse from "../components/Browse";
+import Library from "../components/Library";
 import Create from "../components/Create";
 import Settings from "../components/Settings";
 import StudyDeck from "../components/StudyDeck";
@@ -53,8 +53,8 @@ function MainPage() {
                   }}
                />
             );
-         case "Browse":
-            return <Browse />;
+         case "Library":
+            return <Library />;
          case "Create":
             return <Create />;
          case "Settings":

@@ -69,10 +69,10 @@ const Sidebar = ({ setSelectedFeature, selectedFeature }) => {
                         <span>Create</span>
                      </div>
                      <div
-                        className={`sidebar-feature ${isSelected("Browse") ? "selected" : ""}`}
-                        onClick={() => handleNavigate("Browse")}>
+                        className={`sidebar-feature ${isSelected("Library") ? "selected" : ""}`}
+                        onClick={() => handleNavigate("Library")}>
                         <i className="fa-solid fa-folder"></i>
-                        <span>Browse</span>
+                        <span>Library</span>
                      </div>
                      <div
                         className={`sidebar-feature ${isSelected("Settings") ? "selected" : ""}`}
