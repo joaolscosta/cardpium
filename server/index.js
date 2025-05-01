@@ -551,5 +551,90 @@ app.delete("/decks/:deckId", (req, res) => {
    });
 });
 
+//* Delete a flashcard
+app.delete("/flashcards/:flashcardId", (req, res) => {
+   const sessionToken = req.cookies.session_token;
+   const { flashcardId } = req.params;
+
+   if (!sessionToken) {
+      return res.status(401).json({ error: "Unauthorized" });
+   }
+
+   // Verify the user owns the flashcard
+   const userQuery = `
+      SELECT f.id 
+      FROM flashcards f
+      JOIN decks d ON f.deck_id = d.id
+      JOIN users u ON d.user_id = u.id
+      WHERE f.id = ? AND u.session_id = ?`;
+
+   db.query(userQuery, [flashcardId, sessionToken], (err, results) => {
+      if (err) {
+         console.error("Error verifying flashcard ownership:", err);
+         return res.status(500).json({ error: "Internal server error" });
+      }
+
+      if (results.length === 0) {
+         return res.status(403).json({ error: "Forbidden: You do not own this flashcard" });
+      }
+
+      // Delete the flashcard
+      const deleteQuery = "DELETE FROM flashcards WHERE id = ?";
+      db.query(deleteQuery, [flashcardId], (err) => {
+         if (err) {
+            console.error("Error deleting flashcard:", err);
+            return res.status(500).json({ error: "Internal server error" });
+         }
+
+         res.status(200).json({ message: "Flashcard deleted successfully" });
+      });
+   });
+});
+
+//* Update a flashcard
+app.put("/flashcards/:flashcardId", (req, res) => {
+   const sessionToken = req.cookies.session_token;
+   const { flashcardId } = req.params;
+   const { front, back } = req.body;
+
+   if (!sessionToken) {
+      return res.status(401).json({ error: "Unauthorized" });
+   }
+
+   if (!front || !back) {
+      return res.status(400).json({ error: "Both front and back text are required" });
+   }
+
+   // Verify the user owns the flashcard
+   const userQuery = `
+      SELECT f.id 
+      FROM flashcards f
+      JOIN decks d ON f.deck_id = d.id
+      JOIN users u ON d.user_id = u.id
+      WHERE f.id = ? AND u.session_id = ?`;
+
+   db.query(userQuery, [flashcardId, sessionToken], (err, results) => {
+      if (err) {
+         console.error("Error verifying flashcard ownership:", err);
+         return res.status(500).json({ error: "Internal server error" });
+      }
+
+      if (results.length === 0) {
+         return res.status(403).json({ error: "Forbidden: You do not own this flashcard" });
+      }
+
+      // Update the flashcard
+      const updateQuery = "UPDATE flashcards SET front = ?, back = ? WHERE id = ?";
+      db.query(updateQuery, [front, back, flashcardId], (err) => {
+         if (err) {
+            console.error("Error updating flashcard:", err);
+            return res.status(500).json({ error: "Internal server error" });
+         }
+
+         res.status(200).json({ message: "Flashcard updated successfully" });
+      });
+   });
+});
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

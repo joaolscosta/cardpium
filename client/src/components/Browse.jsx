@@ -7,6 +7,7 @@ const Browse = () => {
    const [selectedDeckId, setSelectedDeckId] = useState(null);
    const [flashcards, setFlashcards] = useState([]);
    const [loading, setLoading] = useState(true);
+   const [editDialog, setEditDialog] = useState({ isOpen: false, flashcard: null });
 
    useEffect(() => {
       const fetchDecks = async () => {
@@ -38,20 +39,45 @@ const Browse = () => {
       }
    };
 
-   const handleRemoveDeck = async (deckId) => {
-      if (!window.confirm("Are you sure you want to delete this deck and all its flashcards?")) {
+   const handleRemoveFlashcard = async (flashcardId) => {
+      if (!window.confirm("Are you sure you want to delete this flashcard?")) {
          return;
       }
 
       try {
-         await axios.delete(`http://localhost:3001/decks/${deckId}`, { withCredentials: true });
-         setDecks(decks.filter((deck) => deck.id !== deckId)); // Remove the deck from the list
-         if (selectedDeckId === deckId) {
-            setSelectedDeckId(null); // Reset selected deck if it was deleted
-         }
+         await axios.delete(`http://localhost:3001/flashcards/${flashcardId}`, { withCredentials: true });
+         setFlashcards(flashcards.filter((flashcard) => flashcard.id !== flashcardId));
       } catch (error) {
-         console.error("Error deleting deck:", error);
-         alert("Failed to delete the deck. Please try again.");
+         console.error("Error deleting flashcard:", error);
+         alert("Failed to delete the flashcard. Please try again."); // TODO - Switch to dialog
+      }
+   };
+
+   const handleOpenEditDialog = (flashcard) => {
+      setEditDialog({ isOpen: true, flashcard });
+   };
+
+   const handleCloseEditDialog = () => {
+      setEditDialog({ isOpen: false, flashcard: null });
+   };
+
+   const handleEditFlashcard = async () => {
+      const { id, front, back } = editDialog.flashcard;
+
+      if (!front || !back) {
+         alert("Both front and back text are required."); // TODO - Switch to dialog
+         return;
+      }
+
+      try {
+         await axios.put(`http://localhost:3001/flashcards/${id}`, { front, back }, { withCredentials: true });
+         setFlashcards(
+            flashcards.map((flashcard) => (flashcard.id === id ? { ...flashcard, front, back } : flashcard))
+         );
+         handleCloseEditDialog();
+      } catch (error) {
+         console.error("Error editing flashcard:", error);
+         alert("Failed to edit the flashcard. Please try again."); // TODO - Switch to dialog
       }
    };
 
@@ -69,10 +95,7 @@ const Browse = () => {
                      <h3 className="deck-name">{deck.name}</h3>
                      <div className="deck-actions">
                         <button className="enter-button" onClick={() => handleEnterDeck(deck.id)}>
-                           <i class="fa-solid fa-right-to-bracket"></i>
-                        </button>
-                        <button className="remove-button" onClick={() => handleRemoveDeck(deck.id)}>
-                           <i class="fa-solid fa-trash"></i>
+                           Enter
                         </button>
                      </div>
                   </li>
@@ -91,15 +114,59 @@ const Browse = () => {
          <ul className="browse-flashcard-list">
             {flashcards.map((flashcard) => (
                <li key={flashcard.id} className="browse-flashcard-item">
-                  <p>
-                     <strong>Front:</strong> {flashcard.front}
-                  </p>
-                  <p>
-                     <strong>Back:</strong> {flashcard.back}
-                  </p>
+                  <div className="flashcard-texts">
+                     <p>
+                        <strong>Front:</strong> {flashcard.front}
+                     </p>
+                     <p>
+                        <strong>Back:</strong> {flashcard.back}
+                     </p>
+                  </div>
+                  <div className="flashcard-actions">
+                     <button className="customize-button" onClick={() => handleOpenEditDialog(flashcard)}>
+                        Edit
+                     </button>
+                     <button className="remove-button" onClick={() => handleRemoveFlashcard(flashcard.id)}>
+                        Remove
+                     </button>
+                  </div>
                </li>
             ))}
          </ul>
+
+         {editDialog.isOpen && (
+            <div className="edit-dialog">
+               <h2>Edit Flashcard</h2>
+               <label>
+                  Front:
+                  <input
+                     type="text"
+                     value={editDialog.flashcard.front}
+                     onChange={(e) =>
+                        setEditDialog({
+                           ...editDialog,
+                           flashcard: { ...editDialog.flashcard, front: e.target.value },
+                        })
+                     }
+                  />
+               </label>
+               <label>
+                  Back:
+                  <input
+                     type="text"
+                     value={editDialog.flashcard.back}
+                     onChange={(e) =>
+                        setEditDialog({
+                           ...editDialog,
+                           flashcard: { ...editDialog.flashcard, back: e.target.value },
+                        })
+                     }
+                  />
+               </label>
+               <button onClick={handleEditFlashcard}>Save</button>
+               <button onClick={handleCloseEditDialog}>Cancel</button>
+            </div>
+         )}
       </div>
    );
 };
