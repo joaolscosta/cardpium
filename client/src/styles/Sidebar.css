@@ -36,6 +36,7 @@
 
 .close-button:hover {
    color: white;
+   transition: color 0.3s ease;
 }
 
 .open-button {
@@ -51,6 +52,7 @@
 
 .open-button:hover {
    color: white;
+   transition: color 0.3s ease;
 }
 
 .sidebar-features {
@@ -74,6 +76,7 @@
 .sidebar-feature:hover {
    background-color: #2b2b2b;
    color: rgb(231, 231, 231);
+   transition: background-color 0.1s ease;
 }
 
 .sidebar-feature.selected {
@@ -81,7 +84,6 @@
    color: rgb(194, 194, 194);
 }
 
-/* User account section */
 .sidebar-user {
    display: flex;
    align-items: center;
@@ -179,7 +181,8 @@
 }
 
 .confirm-button:hover {
-   background-color: #d32f2f;
+   background-color: rgb(201, 35, 35);
+   transition: background-color 0.3s ease;
 }
 
 .cancel-button {
@@ -194,5 +197,6 @@
 }
 
 .cancel-button:hover {
-   background-color: #45a049;
+   background-color: rgb(51, 146, 56);
+   transition: background-color 0.3s ease;
 }

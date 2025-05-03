@@ -59,11 +59,13 @@
 }
 
 .enter-button:hover {
-   background-color: #61ac65;
+   background-color: rgb(59, 133, 63);
+   transition: background-color 0.3s ease;
 }
 
 .remove-button:hover {
-   background-color: #d84c43;
+   background-color: #ca3b30;
+   transition: background-color 0.3s ease;
 }
 
 .browse-loading {
@@ -108,6 +110,7 @@
 
 .back-button:hover {
    background-color: #417a44;
+   transition: background-color 0.3s ease;
 }
 
 .browse-flashcard-list {
@@ -168,6 +171,7 @@
 
 .customize-button:hover {
    background-color: rgb(80, 138, 83);
+   transition: background-color 0.3s ease;
 }
 
 .remove-button {
@@ -175,7 +179,8 @@
 }
 
 .remove-button:hover {
-   background-color: rgb(238, 86, 86);
+   background-color: rgb(204, 51, 51);
+   transition: background-color 0.3s ease;
 }
 
 .edit-dialog-overlay {
@@ -266,7 +271,8 @@
 }
 
 .save-button:hover {
-   background-color: #417a44;
+   background-color: rgb(50, 110, 53);
+   transition: background-color 0.3s ease;
 }
 
 .cancel-button {
@@ -281,7 +287,8 @@
 }
 
 .cancel-button:hover {
-   background-color: #d32f2f;
+   background-color: rgb(202, 36, 36);
+   transition: background-color 0.3s ease;
 }
 
 .delete-dialog-overlay {
@@ -338,7 +345,8 @@
 }
 
 .confirm-button:hover {
-   background-color: rgb(218, 60, 60);
+   background-color: #d4392d;
+   transition: background-color 0.3s ease;
 }
 
 .cancel-button {
@@ -353,5 +361,6 @@
 }
 
 .cancel-button:hover {
-   background-color: #63a867;
+   background-color: #3c833f;
+   transition: background-color 0.3s ease;
 }

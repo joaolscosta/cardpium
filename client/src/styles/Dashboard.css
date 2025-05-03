@@ -22,7 +22,8 @@
 }
 
 .create-deck-button:hover {
-   background-color: #61a164;
+   background-color: rgb(60, 128, 64);
+   transition: background-color 0.3s ease;
 }
 
 .dashboard-deck-list {
@@ -48,6 +49,7 @@
 
 .dashboard-deck-item:hover {
    background-color: #292929;
+   transition: background-color 0.3s ease;
 }
 
 .deck-name {
@@ -69,7 +71,8 @@
 }
 
 .study-button:hover {
-   background-color: #61ac65;
+   background-color: rgb(60, 128, 64);
+   transition: background-color 0.3s ease;
 }
 
 .dashboard-loading {
