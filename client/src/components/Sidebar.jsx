@@ -85,12 +85,7 @@ const Sidebar = ({ setSelectedFeature, selectedFeature }) => {
                         <i className="fa-solid fa-folder"></i>
                         <span>Library</span>
                      </div>
-                     <div
-                        className={`sidebar-feature ${isSelected("Settings") ? "selected" : ""}`}
-                        onClick={() => handleNavigate("Settings")}>
-                        <i className="fa-solid fa-cog"></i>
-                        <span>Settings</span>
-                     </div>
+
                      <div
                         className={`sidebar-feature ${isSelected("Logout") ? "selected" : ""}`}
                         onClick={() => setLogoutDialog(true)}>
@@ -117,7 +112,7 @@ const Sidebar = ({ setSelectedFeature, selectedFeature }) => {
                   </div>
                )}
 
-               <div className="sidebar-user">
+               <div className="sidebar-user" onClick={() => handleNavigate("Account")}>
                   <div className="user-avatar">{user.name[0]}</div>
                   <div className="user-info">
                      <span className="user-name">{user.name}</span>

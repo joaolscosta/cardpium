@@ -85,9 +85,16 @@
 .sidebar-user {
    display: flex;
    align-items: center;
-   padding: 15px;
+   padding: 10px 12px;
    margin-top: auto;
-   margin-bottom: 10px;
+   margin-bottom: 20px;
+}
+
+.sidebar-user:hover {
+   background-color: #2b2b2b;
+   color: rgb(231, 231, 231);
+   border-radius: 5px;
+   cursor: pointer;
 }
 
 .user-avatar {

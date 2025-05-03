@@ -5,7 +5,7 @@ import Sidebar from "../components/Sidebar";
 import Dashboard from "../components/Dashboard";
 import Library from "../components/Library";
 import Create from "../components/Create";
-import Settings from "../components/Settings";
+import Settings from "../components/AccountSettings";
 import StudyDeck from "../components/StudyDeck";
 import "../styles/MainPage.css";
 
@@ -58,7 +58,7 @@ function MainPage() {
             return <Library setSelectedFeature={setSelectedFeature} />;
          case "Create":
             return <Create />;
-         case "Settings":
+         case "Account":
             return <Settings />;
          case "StudyDeck":
             return (

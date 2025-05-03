@@ -636,5 +636,93 @@ app.put("/flashcards/:flashcardId", (req, res) => {
    });
 });
 
+//* Update username
+app.put("/user/username", (req, res) => {
+   const sessionToken = req.cookies.session_token;
+   const { newUsername } = req.body;
+
+   if (!sessionToken) {
+      return res.status(401).json({ error: "Unauthorized" });
+   }
+
+   if (!newUsername) {
+      return res.status(400).json({ error: "New username is required" });
+   }
+
+   const query = "UPDATE users SET username = ? WHERE session_id = ?";
+   db.query(query, [newUsername, sessionToken], (err) => {
+      if (err) {
+         console.error("Error updating username:", err);
+         return res.status(500).json({ error: "Internal server error" });
+      }
+
+      res.status(200).json({ message: "Username updated successfully" });
+   });
+});
+
+//* Update password
+app.put("/user/password", async (req, res) => {
+   const sessionToken = req.cookies.session_token;
+   const { currentPassword, newPassword } = req.body;
+
+   if (!sessionToken) {
+      return res.status(401).json({ error: "Unauthorized" });
+   }
+
+   if (!currentPassword || !newPassword) {
+      return res.status(400).json({ error: "Both current and new passwords are required" });
+   }
+
+   const query = "SELECT * FROM users WHERE session_id = ?";
+   db.query(query, [sessionToken], async (err, results) => {
+      if (err) {
+         console.error("Error fetching user:", err);
+         return res.status(500).json({ error: "Internal server error" });
+      }
+
+      if (results.length === 0) {
+         return res.status(401).json({ error: "Unauthorized" });
+      }
+
+      const user = results[0];
+      const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+
+      if (!isPasswordValid) {
+         return res.status(400).json({ error: "Current password is incorrect" });
+      }
+
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      const updateQuery = "UPDATE users SET password = ? WHERE session_id = ?";
+      db.query(updateQuery, [hashedPassword, sessionToken], (err) => {
+         if (err) {
+            console.error("Error updating password:", err);
+            return res.status(500).json({ error: "Internal server error" });
+         }
+
+         res.status(200).json({ message: "Password updated successfully" });
+      });
+   });
+});
+
+//* Delete account
+app.delete("/user", (req, res) => {
+   const sessionToken = req.cookies.session_token;
+
+   if (!sessionToken) {
+      return res.status(401).json({ error: "Unauthorized" });
+   }
+
+   const query = "DELETE FROM users WHERE session_id = ?";
+   db.query(query, [sessionToken], (err) => {
+      if (err) {
+         console.error("Error deleting account:", err);
+         return res.status(500).json({ error: "Internal server error" });
+      }
+
+      res.clearCookie("session_token");
+      res.status(200).json({ message: "Account deleted successfully" });
+   });
+});
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
