@@ -23,6 +23,17 @@ Cardpium is a modern, full-stack flashcard management application that helps you
 -  Secure user authentication including 2FA and session management.
 -  Personal workspace for managing decks and flashcards.
 
+### 1.4 Ideas to implement in the future
+
+-  Use OpenAI's API to generate flashcards from user-provided text or documents.
+-  Allow users to add tags to flashcards for better organization and filtering.
+-  Add a search bar to quickly find flashcards by keywords.
+-  Allow users to import/export flashcards in CSV or JSON format.
+-  Allow users to share decks with others via a unique link or email.
+-  Enable sorting decks by name, creation date, or number of flashcards.
+-  Provide users with insights into their study habits, such as time spent studying or flashcards reviewed.
+-  Add login options using Google, Facebook, or GitHub.
+
 ---
 
 ## 2. Setup Instructions

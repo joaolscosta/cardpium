@@ -5,6 +5,7 @@ import mysql from "mysql2";
 import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
 import cookieParser from "cookie-parser";
+import axios from "axios";
 
 dotenv.config();
 const app = express();
@@ -17,6 +18,8 @@ app.use(
 );
 app.use(express.json());
 app.use(cookieParser());
+
+const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 
 const db = mysql.createConnection({
    host: process.env.DB_HOST,
@@ -35,6 +38,48 @@ db.connect((err) => {
 
 app.get("/test", (req, res) => {
    res.send("running");
+});
+
+app.post("/generate-flashcards", async (req, res) => {
+   const { text } = req.body;
+
+   if (!text) {
+      return res.status(400).json({ error: "Text is required" });
+   }
+
+   try {
+      const response = await axios.post(
+         "https://openrouter.ai/api/v1/chat/completions",
+         {
+            model: "openai/gpt-4o",
+            messages: [
+               {
+                  role: "user",
+                  content: `Generate flashcards from the following text:\n\n${text}\n\nFormat: Front: [question], Back: [answer]`,
+               },
+            ],
+         },
+         {
+            headers: {
+               Authorization: `Bearer ${OPENROUTER_API_KEY}`,
+               "Content-Type": "application/json",
+            },
+         }
+      );
+
+      const flashcards = response.data.choices[0].message.content
+         .trim()
+         .split("\n")
+         .map((line) => {
+            const [front, back] = line.split("Back:");
+            return { front: front.replace("Front:", "").trim(), back: back.trim() };
+         });
+
+      res.json(flashcards);
+   } catch (error) {
+      console.error("Error generating flashcards:", error.response?.data || error.message || error);
+      res.status(500).json({ error: "Failed to generate flashcards" });
+   }
 });
 
 /* ------------------------ 2FA Verification Code Generation and Sending ------------------------ */
