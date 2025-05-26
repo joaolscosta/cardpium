@@ -2,6 +2,8 @@
 
 Cardpium is a modern, full-stack flashcard management application that helps you create, organize, and study flashcards in an intuitive interface. Built with React for the frontend and Express for the backend, Cardpium provides a seamless experience for managing your study materials. With support for creating decks and flashcards, it’s the perfect tool for students, educators, and lifelong learners.
 
+![Cardpium Screenshot](img/cardpium_create_screen.png)
+
 ---
 
 ## 1. Features
